@@ -1,4 +1,6 @@
 "use client";
+import ImageDescInput from "@/components/ImageDescInput";
+import { TextareaWithButton } from "@/components/TextAreaWithButton";
 import { useState, ChangeEvent } from "react";
 
 interface UploadedImage {
@@ -82,6 +84,10 @@ export default function Home() {
           />
         ))}
         {uploadedImages.length <= 3 && uploadHTML}
+      </div>
+
+      <div className="fixed bottom-0 w-full -mx-8 p-4">
+        <TextareaWithButton />
       </div>
     </main>
   );
