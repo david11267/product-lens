@@ -23,6 +23,7 @@ const config = {
         secondary: "#95C9DC",
         accent: "#63B6D4",
         active: "#63B6D4",
+        danger: "#FF0000",
       },
       borderRadius: {
         lg: "var(--radius)",

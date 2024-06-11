@@ -1,7 +1,8 @@
 "use client";
-import ImageDescInput from "@/components/ImageDescInput";
 import { TextareaWithButton } from "@/components/TextAreaWithButton";
-import { useState, ChangeEvent } from "react";
+import { url } from "inspector";
+import { useState, ChangeEvent, EventHandler } from "react";
+import { TiDelete } from "react-icons/ti";
 
 interface UploadedImage {
   file: File;
@@ -30,13 +31,18 @@ export default function Home() {
     }
   };
 
+  function handleDeleteImage(url: string) {
+    const newState = uploadedImages.filter((image) => image.url !== url);
+    setUploadedImages(newState);
+  }
+
   const uploadHTML = (
     <div className="flex items-center justify-center w-full">
       <label
         htmlFor="dropzone-file"
-        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+        className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
       >
-        <div className="flex flex-col items-center justify-center p-4">
+        <div className="flex flex-col items-center justify-center p-2">
           <svg
             className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
             aria-hidden="true"
@@ -76,12 +82,17 @@ export default function Home() {
     <main>
       <div className="grid grid-cols-2 gap-4">
         {uploadedImages.map((image, index) => (
-          <img
-            key={index}
-            src={image.url}
-            alt={`Uploaded ${index + 1}`}
-            className="w-full h-64 object-cover rounded-lg cursor-pointer"
-          />
+          <div key={image.url} className="relative">
+            <img
+              src={image.url}
+              alt={`Uploaded ${index + 1}`}
+              className="z-10 w-full h-48 object-cover rounded-lg "
+            />
+            <TiDelete
+              onClick={() => handleDeleteImage(image.url)}
+              className="transition absolute top-0 text-danger text-4xl cursor-pointer hover:scale-125 "
+            />
+          </div>
         ))}
         {uploadedImages.length <= 3 && uploadHTML}
       </div>

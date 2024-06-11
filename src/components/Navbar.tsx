@@ -17,14 +17,15 @@ export default function Navbar({ user }: props) {
 
   return (
     <>
-      <nav className="text-center">
-        <div className="border p-1 inline-flex space-x-2 rounded-lg">
+      <nav className="flex justify-center ">
+        <div className="border p-1 inline-flex space-x-2 rounded-lg ">
           {LINKS.map((link) => (
             <Link
               href={link.link}
               key={link.name}
               className={
-                (pathname === link.link ? "bg-active" : "") + "  p-4 rounded-lg"
+                (pathname === link.link ? "bg-active" : "") +
+                "  p-2 rounded-lg transition-all hover:font-bold"
               }
             >
               {link.name}
