@@ -1,12 +1,8 @@
 "use client";
-import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-interface props {
-  user: User;
-}
 
-export default function Navbar({ user }: props) {
+export default function Navbar() {
   const pathname = usePathname();
 
   const LINKS = [

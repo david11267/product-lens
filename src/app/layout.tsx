@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import { redirect } from "next/navigation";
 import { CreateUserIfNotFound } from "@/lib/dbService";
 import { User } from "@prisma/client";
+import { UserProvider } from "./hooks/UserContext";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,9 +30,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} p-8  space-y-8 `}>
-        <Navbar user={user} />
-        {children}
+      <body className={`${inter.className} p-8  space-y-8 antialiased  `}>
+        <Navbar />
+        <SessionProvider>
+          <UserProvider user={user}>{children}</UserProvider>
+        </SessionProvider>
       </body>
     </html>
   );

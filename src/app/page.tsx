@@ -11,6 +11,7 @@ interface UploadedImage {
 
 export default function Home() {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [descriptionInput, setDescriptionInput] = useState<string>("");
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const fileLimit = 4;
@@ -98,7 +99,10 @@ export default function Home() {
       </div>
 
       <div className="fixed bottom-0 w-full -mx-8 p-4">
-        <TextareaWithButton />
+        <TextareaWithButton
+          descriptionInput={descriptionInput}
+          setDescriptionInput={setDescriptionInput}
+        />
       </div>
     </main>
   );
