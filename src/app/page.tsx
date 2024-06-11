@@ -1,18 +1,88 @@
-import TabNav from "@/components/TabNav";
-import Image from "next/image";
-import Link from "next/link";
-import { auth, signIn, signOut } from "@/auth";
-import { Props } from "next/script";
-import { redirect } from "next/navigation";
+"use client";
+import { useState, ChangeEvent } from "react";
 
-export default async function Home() {
-  const session = await auth();
-  if (!session) {
-    redirect("/api/auth/signin");
-  }
+interface UploadedImage {
+  file: File;
+  url: string;
+}
+
+export default function Home() {
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const fileLimit = 4;
+
+    if (event.target.files) {
+      const files = Array.from(event.target.files);
+
+      if (files.length + uploadedImages.length > fileLimit) {
+        alert(`You can only upload up to ${fileLimit} files.`);
+        return;
+      }
+      const imageObjects = files.map((file) => ({
+        file,
+        url: URL.createObjectURL(file),
+      }));
+
+      setUploadedImages((prevImages) => [...prevImages, ...imageObjects]);
+    }
+  };
+
+  const uploadHTML = (
+    <div className="flex items-center justify-center w-full">
+      <label
+        htmlFor="dropzone-file"
+        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+      >
+        <div className="flex flex-col items-center justify-center p-4">
+          <svg
+            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 16"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+            />
+          </svg>
+          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            <span className="font-semibold">Click to upload</span> or drag and
+            drop
+          </p>
+          <p className="text-center text-xs text-gray-500 dark:text-gray-400">
+            SVG, PNG, JPG or GIF (MAX. 800x400px)
+          </p>
+        </div>
+        <input
+          id="dropzone-file"
+          type="file"
+          className="hidden"
+          multiple
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+      </label>
+    </div>
+  );
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <TabNav session={session} />
+    <main>
+      <div className="grid grid-cols-2 gap-4">
+        {uploadedImages.map((image, index) => (
+          <img
+            key={index}
+            src={image.url}
+            alt={`Uploaded ${index + 1}`}
+            className="w-full h-64 object-cover rounded-lg cursor-pointer"
+          />
+        ))}
+        {uploadedImages.length <= 3 && uploadHTML}
+      </div>
     </main>
   );
 }
