@@ -48,7 +48,7 @@ export default function Home() {
 
     // Append other data
     formData.append("description", descriptionInput);
-    formData.append("user", JSON.stringify(user)); // Convert user object to string
+    formData.append("user", JSON.stringify(user.user)); // Convert user object to string
     const response = await fetch("/api/Identify", {
       method: "POST",
       body: formData,

@@ -1,7 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import { User as SessionUser } from "next-auth";
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 export async function CreateUserIfNotFound(
   sessionUser: SessionUser
