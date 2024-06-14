@@ -19,8 +19,8 @@ export default function page() {
       <div>{currentStatus()}</div>
       <div>{session?.expires}</div>
       <div>{user.id}</div>
-      <div>{session?.user?.email}</div>
-      <div>{session?.user?.name}</div>
+      <div>{user.email}</div>
+      <div>{user.name}</div>
       {session?.user?.image && <img src={session?.user?.image}></img>}
       <div>{user.aiTokens}</div>
     </div>

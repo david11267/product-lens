@@ -3,8 +3,8 @@ import { TextareaWithButton } from "@/components/TextAreaWithButton";
 import { url } from "inspector";
 import { useState, ChangeEvent, EventHandler } from "react";
 import { TiDelete } from "react-icons/ti";
-
-interface UploadedImage {
+import { useUser } from "./hooks/UserContext";
+export interface UploadedImage {
   file: File;
   url: string;
 }
@@ -12,6 +12,7 @@ interface UploadedImage {
 export default function Home() {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const [descriptionInput, setDescriptionInput] = useState<string>("");
+  const user = useUser();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const fileLimit = 4;
@@ -35,6 +36,23 @@ export default function Home() {
   function handleDeleteImage(url: string) {
     const newState = uploadedImages.filter((image) => image.url !== url);
     setUploadedImages(newState);
+  }
+
+  async function IdentifyRequest() {
+    const formData = new FormData();
+
+    // Append each image file to formData
+    uploadedImages.forEach((image) => {
+      formData.append("images", image.file);
+    });
+
+    // Append other data
+    formData.append("description", descriptionInput);
+    formData.append("user", JSON.stringify(user)); // Convert user object to string
+    const response = await fetch("/api/Identify", {
+      method: "POST",
+      body: formData,
+    });
   }
 
   const uploadHTML = (
@@ -100,6 +118,7 @@ export default function Home() {
 
       <div className="fixed bottom-0 w-full -mx-8 p-4">
         <TextareaWithButton
+          IdentifyRequest={IdentifyRequest}
           descriptionInput={descriptionInput}
           setDescriptionInput={setDescriptionInput}
         />
