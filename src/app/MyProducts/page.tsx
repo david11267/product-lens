@@ -1,6 +1,4 @@
-import { IdentifyRequest } from "@prisma/client";
-import React from "react";
-import { json } from "stream/consumers";
+import React, { Suspense } from "react";
 
 interface Product {
   id: string;
@@ -24,13 +22,13 @@ export default async function page() {
     <div className="flex justify-center">
       <div>
         {products.map((p) => (
-          <div className="p-8">
-            <p>{p.description}</p>
-            <p>
+          <div key={p.id} className="p-8">
+            <p className="p-2">{p.description}</p>
+            <div className="inline-flex">
               {p.images.uploadedImageUrls.map((iu) => (
-                <img src={iu}></img>
+                <img key={iu} className="h-40 w-40 object-cover px-2" src={iu}></img>
               ))}
-            </p>
+            </div>
           </div>
         ))}
       </div>
