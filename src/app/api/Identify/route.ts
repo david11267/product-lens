@@ -13,9 +13,7 @@ export async function POST(request: Request) {
   try {
     const parsedRequestData = await ParseFormData(request);
     const uploadedImageUrls = await UploadImages(parsedRequestData);
-    const jsonUploadedImageUrls = {
-      imageUrls: uploadedImageUrls,
-    };
+    const jsonUploadedImageUrls = { uploadedImageUrls };
     const IdentifyRequest = {
       id: randomUUID(),
       description: parsedRequestData.description,
