@@ -7,14 +7,14 @@ export default function Navbar() {
 
   const LINKS = [
     { name: "Identify", link: "/" },
-    { name: "My Products", link: "/Products" },
+    { name: "My Products", link: "/MyProducts" },
     { name: "Profile", link: "/Profile" },
   ];
 
   return (
     <>
       <nav className="flex justify-center ">
-        <div className="border p-1 inline-flex space-x-2 rounded-lg ">
+        <div className="border p-2 inline-flex space-x-2 rounded-lg ">
           {LINKS.map((link) => (
             <Link
               href={link.link}

@@ -3,7 +3,7 @@ import { TextareaWithButton } from "@/components/TextAreaWithButton";
 import { url } from "inspector";
 import { useState, ChangeEvent, EventHandler } from "react";
 import { TiDelete } from "react-icons/ti";
-import { useUser } from "./hooks/UserContext";
+import { UseUser } from "./hooks/UserContext";
 export interface UploadedImage {
   file: File;
   url: string;
@@ -12,7 +12,7 @@ export interface UploadedImage {
 export default function Home() {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const [descriptionInput, setDescriptionInput] = useState<string>("");
-  const user = useUser();
+  const user = UseUser();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const fileLimit = 4;

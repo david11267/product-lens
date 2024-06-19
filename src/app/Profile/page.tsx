@@ -1,12 +1,12 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { useUser } from "../hooks/UserContext";
+import { UseUser } from "../hooks/UserContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonCard } from "@/components/SkeletonCard";
 
 export default function page() {
-  const { session, status, user } = useUser();
+  const { session, status, user } = UseUser();
 
   const currentStatus = () => {
     if (status === "loading") return <SkeletonCard />;
