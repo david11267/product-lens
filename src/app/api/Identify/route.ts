@@ -1,8 +1,8 @@
-import { UploadedImage } from "@/app/page";
 import { prisma } from "@/lib/dbService";
-import { Prisma, User } from "@prisma/client";
+import { IdentifyRequest, Prisma, User } from "@prisma/client";
 import { put } from "@vercel/blob";
-import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
+
 interface RequestData {
   images: File[];
   description: string;
@@ -13,6 +13,15 @@ export async function POST(request: Request) {
   try {
     const parsedRequestData = await ParseFormData(request);
     const uploadedImageUrls = await UploadImages(parsedRequestData);
+    const jsonUploadedImageUrls = {
+      imageUrls: uploadedImageUrls,
+    };
+    const IdentifyRequest = {
+      id: randomUUID(),
+      description: parsedRequestData.description,
+      images: jsonUploadedImageUrls,
+    };
+
     const updatedUser = await prisma.user.update({
       where: {
         id: parsedRequestData.user.id,
@@ -20,6 +29,9 @@ export async function POST(request: Request) {
       data: {
         aiTokens: {
           decrement: 1,
+        },
+        identifyRequests: {
+          create: IdentifyRequest,
         },
       },
     });
