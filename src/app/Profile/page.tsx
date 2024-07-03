@@ -21,6 +21,7 @@ export default async function page() {
       <div>{session?.user?.id}</div>
       <div>{session?.user?.email}</div>
       <div>{session?.user?.name}</div>
+      <div>{session?.user?.aiTokens}</div>
 
       {session?.user?.image && <img src={session?.user?.image}></img>}
       <div className="pt-6">
