@@ -16,6 +16,14 @@ export default async function page() {
 
   console.log(res);
   const products: Product[] = await res.json();
+
+  if (res.ok == false) {
+    return (
+      <>
+        <div>PRODUCTS LOAD ERROR</div>
+      </>
+    );
+  }
   console.log(products);
 
   return (
@@ -26,7 +34,11 @@ export default async function page() {
             <p className="p-2">{p.description}</p>
             <div className="inline-flex">
               {p.images.uploadedImageUrls.map((iu) => (
-                <img key={iu} className="h-40 w-40 object-cover px-2" src={iu}></img>
+                <img
+                  key={iu}
+                  className="h-40 w-40 object-cover px-2"
+                  src={iu}
+                ></img>
               ))}
             </div>
           </div>
