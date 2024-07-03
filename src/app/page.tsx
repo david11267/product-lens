@@ -1,9 +1,9 @@
 "use client";
+import { auth } from "@/auth";
 import { TextareaWithButton } from "@/components/TextAreaWithButton";
 import { url } from "inspector";
 import { useState, ChangeEvent, EventHandler } from "react";
 import { TiDelete } from "react-icons/ti";
-import { UseUser } from "./hooks/UserContext";
 export interface UploadedImage {
   file: File;
   url: string;
@@ -12,7 +12,6 @@ export interface UploadedImage {
 export default function Home() {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const [descriptionInput, setDescriptionInput] = useState<string>("");
-  const user = UseUser();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const fileLimit = 4;
@@ -48,7 +47,7 @@ export default function Home() {
 
     // Append other data
     formData.append("description", descriptionInput);
-    formData.append("user", JSON.stringify(user.user)); // Convert user object to string
+    formData.append("user", JSON.stringify("user.user")); // Convert user object to string
     const response = await fetch("/api/Identify", {
       method: "POST",
       body: formData,

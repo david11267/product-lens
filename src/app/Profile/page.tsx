@@ -1,28 +1,31 @@
-"use client";
-
 import React, { Suspense } from "react";
-import { UseUser } from "../hooks/UserContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonCard } from "@/components/SkeletonCard";
+import { auth } from "@/auth";
+import SignOut from "@/components/SignOut";
 
-export default function page() {
-  const { session, status, user } = UseUser();
+export default async function page() {
+  const session = await auth();
 
-  const currentStatus = () => {
-    if (status === "loading") return <SkeletonCard />;
-    if (status === "authenticated") return <h1>authenticated</h1>;
-    if (status === "unauthenticated") return <h1>unauthenticated</h1>;
-  };
+  if (!session) {
+    return (
+      <>
+        <div>NOT AUTHENTICATED</div>
+      </>
+    );
+  }
 
   return (
-    <div className=" ">
-      <div>{currentStatus()}</div>
+    <div>
       <div>{session?.expires}</div>
-      <div>{user.id}</div>
-      <div>{user.email}</div>
-      <div>{user.name}</div>
+      <div>{session?.user?.id}</div>
+      <div>{session?.user?.email}</div>
+      <div>{session?.user?.name}</div>
+
       {session?.user?.image && <img src={session?.user?.image}></img>}
-      <div>{user.aiTokens}</div>
+      <div className="pt-6">
+        <SignOut />
+      </div>
     </div>
   );
 }

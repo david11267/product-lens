@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import { redirect } from "next/navigation";
 import { CreateUserIfNotFound } from "@/lib/dbService";
 import { User } from "@prisma/client";
-import { UserProvider } from "./hooks/UserContext";
 import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,20 +20,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-  if (session?.user?.email == null) {
-    redirect("/api/auth/signin");
-  }
-
-  const user = await CreateUserIfNotFound(session.user);
-
   return (
     <html lang="en">
       <body className={`${inter.className} p-8  space-y-8 antialiased  `}>
         <Navbar />
-        <SessionProvider>
-          <UserProvider user={user}>{children}</UserProvider>
-        </SessionProvider>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
