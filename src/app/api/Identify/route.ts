@@ -1,7 +1,9 @@
+import { auth } from "@/auth";
 import { prisma } from "@/lib/dbService";
 import { User } from "@prisma/client";
 import { put } from "@vercel/blob";
 import { randomUUID } from "crypto";
+import cookie from "cookie";
 
 interface RequestData {
   images: File[];
@@ -9,35 +11,48 @@ interface RequestData {
   user: User;
 }
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const parsedRequestData = await ParseFormData(request);
-    const uploadedImageUrls = await UploadImages(parsedRequestData);
-    const jsonUploadedImageUrls = { uploadedImageUrls };
-    const IdentifyRequest = {
-      id: randomUUID(),
-      description: parsedRequestData.description,
-      images: jsonUploadedImageUrls,
-    };
+    const user = await VerifyUserAsync();
 
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: parsedRequestData.user.id,
-      },
-      data: {
-        aiTokens: {
-          decrement: 1,
+    if (user) {
+      // User is verified and available
+      console.log("User ID:", user.id);
+      console.log("User Name:", user.name);
+      // Access other user properties as needed
+
+      const parsedRequestData = await ParseFormData(req);
+      const uploadedImageUrls = await UploadImages(parsedRequestData);
+      const jsonUploadedImageUrls = { uploadedImageUrls };
+      const IdentifyRequest = {
+        id: randomUUID(),
+        description: parsedRequestData.description,
+        images: jsonUploadedImageUrls,
+      };
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: user.id,
         },
-      },
-    });
+        data: {
+          aiTokens: {
+            decrement: 1,
+          },
+        },
+      });
 
-    console.log("Updated user:", updatedUser);
-    return Response.json({
-      message: "Request processed successfully",
-      user: updatedUser,
-    });
+      console.log("Updated user:", updatedUser);
+      return Response.json({
+        message: "Request processed successfully",
+        user: updatedUser,
+      });
+    } else {
+      // Handle case where user is not found
+      console.log("User not found or not authenticated");
+    }
   } catch (error) {
-    console.error("Error processing request:", error);
+    // Handle errors
+    console.error("Error verifying user:", error);
     return Response.json({ error: "Internal Server Error" });
   }
 }
@@ -80,4 +95,21 @@ async function UploadImages(parsedRequestData: RequestData) {
   }
   console.log("Uploaded image URLs:", uploadedImageUrls);
   return uploadedImageUrls;
+}
+
+async function VerifyUserAsync(): Promise<User | null> {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user) {
+    return null;
+  }
+
+  const userInDb = await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+  });
+
+  return userInDb;
 }
