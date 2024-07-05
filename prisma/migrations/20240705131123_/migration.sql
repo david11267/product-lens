@@ -7,6 +7,7 @@ CREATE TABLE "User" (
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "aiTokens" INTEGER NOT NULL DEFAULT 5,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

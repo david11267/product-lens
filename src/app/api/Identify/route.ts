@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/dbService";
-import { IdentifyRequest, Prisma, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { put } from "@vercel/blob";
 import { randomUUID } from "crypto";
 
@@ -27,9 +27,6 @@ export async function POST(request: Request) {
       data: {
         aiTokens: {
           decrement: 1,
-        },
-        identifyRequests: {
-          create: IdentifyRequest,
         },
       },
     });
