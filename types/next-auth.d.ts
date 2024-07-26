@@ -1,5 +1,6 @@
 // types/next-auth.d.ts
 import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
+import { Interface } from "readline";
 
 declare module "next-auth" {
   interface Session {
@@ -15,4 +16,15 @@ declare module "next-auth" {
   interface User extends DefaultUser {
     aiTokens: number;
   }
+}
+
+interface aiResponse {
+  confidence: number;
+  name: string;
+  brand: string;
+  releaseYear: number;
+  priceHistory: {
+    used: { date: Date; price: Number };
+    new: { date: Date; price: Number };
+  }[];
 }

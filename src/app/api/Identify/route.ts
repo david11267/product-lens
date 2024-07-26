@@ -3,7 +3,7 @@ import { prisma } from "@/lib/dbService";
 import { User } from "@prisma/client";
 import { put } from "@vercel/blob";
 import { randomUUID } from "crypto";
-import cookie from "cookie";
+import { GetOpenAIResult } from "@/lib/OpenAIService";
 
 interface RequestData {
   images: File[];
@@ -17,18 +17,20 @@ export async function POST(req: Request) {
 
     if (user) {
       // User is verified and available
-      console.log("User ID:", user.id);
-      console.log("User Name:", user.name);
+      console.log(`Verified User: ${user.name} ID: ${user.id}`);
       // Access other user properties as needed
-
       const parsedRequestData = await ParseFormData(req);
       const uploadedImageUrls = await UploadImages(parsedRequestData);
-      const jsonUploadedImageUrls = { uploadedImageUrls };
       const IdentifyRequest = {
         id: randomUUID(),
         description: parsedRequestData.description,
-        images: jsonUploadedImageUrls,
+        images: uploadedImageUrls,
       };
+
+      const result = await GetOpenAIResult(
+        uploadedImageUrls,
+        parsedRequestData.description
+      );
 
       const updatedUser = await prisma.user.update({
         where: {
@@ -112,4 +114,7 @@ async function VerifyUserAsync(): Promise<User | null> {
   });
 
   return userInDb;
+}
+function DeligateToAiAgentsAsync(images: File[], description: string) {
+  throw new Error("Function not implemented.");
 }
