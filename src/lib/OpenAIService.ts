@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { toBase64 } from "openai/core.mjs";
+import { json } from "stream/consumers";
 
 export async function GetOpenAIResult(
   imageUrls: string[],
@@ -30,6 +31,7 @@ export async function GetOpenAIResult(
     model: "gpt-4o-mini",
     temperature: 0.1,
     stream: false,
+    response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
@@ -47,5 +49,11 @@ export async function GetOpenAIResult(
     ],
   });
 
-  console.log(response.choices[0].message.content);
+  const result = response.choices[0].message.content;
+  console.log(result);
+
+  if (result) {
+    const jsonResult = JSON.parse(result);
+    console.log(jsonResult);
+  }
 }
