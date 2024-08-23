@@ -23,5 +23,10 @@ export const {
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
+    session({ session, user }) {
+      session.user.id = user.id;
+      session.user.aiTokens = user.aiTokens;
+      return session;
+    },
   },
 });

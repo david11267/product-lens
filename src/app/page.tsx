@@ -4,14 +4,17 @@ import { TextareaWithButton } from "@/components/TextAreaWithButton";
 import { url } from "inspector";
 import { useState, ChangeEvent, EventHandler } from "react";
 import { TiDelete } from "react-icons/ti";
+import { useSession } from "next-auth/react";
+
 export interface UploadedImage {
   file: File;
   url: string;
 }
 
-export default function Home() {
+export default async function Home() {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const [descriptionInput, setDescriptionInput] = useState<string>("");
+  const { data: session, status } = useSession();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const fileLimit = 4;
@@ -47,7 +50,8 @@ export default function Home() {
 
     // Append other data
     formData.append("description", descriptionInput);
-    formData.append("user", JSON.stringify("user.user")); // Convert user object to string
+    console.log(session?.user);
+    formData.append("user", JSON.stringify(session?.user)); // Convert user object to string
     const response = await fetch("/api/Identify", {
       method: "POST",
       body: formData,

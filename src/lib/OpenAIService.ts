@@ -28,7 +28,7 @@ export async function GetOpenAIResult(
   );
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
     temperature: 0.1,
     stream: false,
     response_format: { type: "json_object" },
